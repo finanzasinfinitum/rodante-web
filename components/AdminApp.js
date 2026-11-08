@@ -38,7 +38,7 @@ export default function AdminApp() {
   if (!supabaseReady) return wrap(
     <div className="card" style={{ padding: 32, maxWidth: 640 }}>
       <h1 className="h3">Panel de administración</h1>
-      <p className="muted">Falta conectar la base de datos (Supabase). Agrega las variables <code>NEXT_PUBLIC_SUPABASE_URL</code> y <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> en Vercel y vuelve a publicar.</p>
+      <p className="muted">Falta conectar la base de datos (Supabase). Agrega las variables <code>NEXT_PUBLIC_SUPABASE_URL</code> y <code>NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</code> en Vercel y vuelve a publicar.</p>
     </div>
   );
   if (!ready) return wrap(<p className="muted">Cargando…</p>);

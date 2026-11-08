@@ -15,5 +15,5 @@ Compra, venta y carwash por membresía. Next.js 14 + Supabase.
 
 ## Variables (en Vercel → Settings → Environment Variables)
 - `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (o `NEXT_PUBLIC_SUPABASE_ANON_KEY`)
 Sin ellas, el catálogo muestra autos de muestra.

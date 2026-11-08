@@ -59,7 +59,7 @@ drop policy if exists "autos_admin_delete" on storage.objects;
 create policy "autos_admin_delete" on storage.objects for delete using (bucket_id = 'autos' and public.is_admin());
 
 -- 5) TU CORREO de administrador (cámbialo antes de correr)
-insert into public.admins (email) values ('TU_CORREO@gmail.com') on conflict do nothing;
+insert into public.admins (email) values ('finanzas.infinitum@gmail.com') on conflict do nothing;
 
 -- 6) Autos de prueba (opcional; bórralos luego desde el panel)
 insert into public.cars (brand, model, version, year, km, price, body_type, transmission, fuel, badge, description) values
