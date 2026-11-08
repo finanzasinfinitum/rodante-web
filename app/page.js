@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import QuickQuote from '@/components/QuickQuote';
-import { CarPlaceholder, Swap, CarIcon, Drop } from '@/components/Icons';
+import { Swap, CarIcon, Drop } from '@/components/Icons';
+import CarCardBody, { CarThumb } from '@/components/CarCard';
+import { getCars } from '@/lib/cars';
 
 const LINES = [
   { href: '/vende', kicker: 'Vende tu auto', title: 'Te compramos tu auto', desc: 'Cotiza en línea y elige: pago inmediato o un mejor precio esperando unos días.', cta: 'Cotizar ahora', Icon: Swap },
@@ -14,14 +16,10 @@ const STEPS = [
   { n: 3, title: 'Coordina por WhatsApp', desc: 'Un asesor agenda la inspección y firmamos la transferencia.' },
 ];
 
-// Datos de prueba — en el paso 3 vendrán del catálogo real
-const CARS = [
-  { name: 'Toyota RAV4 XLE', meta: '2021 · 42,000 km · Automática', price: 'US$ 27,900', bg: '#e3efef' },
-  { name: 'Hyundai Tucson GLS', meta: '2020 · 58,000 km · Automática', price: 'US$ 21,500', bg: '#fdf1d8' },
-  { name: 'Kia Rio EX', meta: '2022 · 31,000 km · Mecánica', price: 'US$ 13,800', bg: '#ecebe6' },
-];
+export const revalidate = 60;
 
-export default function Home() {
+export default async function Home() {
+  const cars = (await getCars()).slice(0, 3);
   return (
     <>
       <section className="container" style={{ padding: '64px 24px 48px', display: 'flex', flexWrap: 'wrap', gap: 48, alignItems: 'center' }}>
@@ -77,17 +75,10 @@ export default function Home() {
           <Link href="/catalogo" style={{ fontWeight: 700, fontSize: 15 }}>Ver todo el catálogo →</Link>
         </div>
         <div style={{ display: 'grid', gap: 16, gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
-          {CARS.map((c) => (
-            <Link key={c.name} href="/catalogo" className="card card-hover" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', textDecoration: 'none', color: 'var(--ink)' }}>
-              <div style={{ position: 'relative', aspectRatio: '4 / 3', background: c.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <CarPlaceholder />
-                <span className="chip chip-accent" style={{ position: 'absolute', top: 12, left: 12 }}>Nuevo ingreso</span>
-              </div>
-              <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 6 }}>
-                <span style={{ fontSize: 18, fontWeight: 700 }}>{c.name}</span>
-                <span className="muted" style={{ fontSize: 14 }}>{c.meta}</span>
-                <span className="tabular" style={{ fontSize: 28, lineHeight: '32px', fontWeight: 800, marginTop: 8 }}>{c.price}</span>
-              </div>
+          {cars.map((c, k) => (
+            <Link key={c.id} href={`/catalogo/${c.id}`} className="card card-hover" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', textDecoration: 'none', color: 'var(--ink)' }}>
+              <CarThumb car={c} index={k} />
+              <CarCardBody car={c} />
             </Link>
           ))}
         </div>

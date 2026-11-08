@@ -1,19 +1,19 @@
 # Rodante — sitio web
 
-Compra, venta y carwash por membresía. Hecho con Next.js 14.
+Compra, venta y carwash por membresía. Next.js 14 + Supabase.
 
-## Qué incluye (paso 2)
-- `/` Inicio con cotización rápida
-- `/vende` Formulario de venta con dos ofertas y envío a WhatsApp
-- `/catalogo` y `/carwash` en "Muy pronto" (pasos 3 y 4)
+## Páginas
+- `/` Inicio · `/vende` Vende tu auto (ofertas + WhatsApp)
+- `/catalogo` Catálogo con filtros · `/catalogo/[id]` Ficha de cada auto
+- `/admin` Panel para agregar/editar autos (requiere Supabase)
+- `/carwash` Muy pronto
 
 ## Dónde cambiar datos
-- `lib/config.js` → número de WhatsApp, dirección, correo
-- `lib/pricing.js` → marcas, modelos, versiones y reglas de las ofertas (datos de prueba)
+- `lib/config.js` → WhatsApp, dirección, correo
+- `lib/pricing.js` → marcas, modelos y reglas de las ofertas
+- `supabase/schema.sql` → base de datos (correr una vez en Supabase)
 
-## Probar en una computadora (opcional)
-```
-npm install
-npm run dev
-```
-Abrir http://localhost:3000
+## Variables (en Vercel → Settings → Environment Variables)
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+Sin ellas, el catálogo muestra autos de muestra.
