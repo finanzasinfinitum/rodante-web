@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import CarGallery from './CarGallery';
 import CarCardBody, { CarThumb, Specs } from './CarCard';
-import { BODY_TYPES, carName, interestMessage } from '@/lib/cars';
+import { BODY_TYPES, carName, interestMessage } from '@/lib/carUtils';
 import { usd } from '@/lib/pricing';
 import { waLink } from '@/lib/config';
 

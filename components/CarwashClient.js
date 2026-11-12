@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useCart, setCart, setExtraQty, clearCart } from '@/lib/cartStore';
 import { SIZES, PERIODS, PLANS, CATEGORIES, SERVICES, computeCart, soles } from '@/lib/carwash';
 import { waLink } from '@/lib/config';
+import Link from 'next/link';
 import { Check, Chat } from './Icons';
 
 const PLACA_RE = /^[A-Z0-9]{3}-?[A-Z0-9]{3}$/;
@@ -18,6 +19,7 @@ function orderMessage(c, cart) {
     `Total: ${soles(c.total)}`,
     `Vehículo: ${c.size.label}${cart.placa ? ` · Placa ${cart.placa}` : ''}`,
     `Nombre: ${cart.nombre}`,
+    `Celular: ${cart.celular}`,
   ].join('\n');
 }
 
@@ -34,9 +36,15 @@ export default function CarwashClient() {
   const confirm = () => {
     const e = {};
     if (!cart.nombre.trim()) e.nombre = 'Escribe tu nombre.';
+    if (!/^9\d{8}$/.test((cart.celular || '').replace(/\D/g, '').slice(-9))) e.celular = 'Escribe un celular de 9 dígitos.';
     if (c.plan && !PLACA_RE.test(cart.placa)) e.placa = 'Escribe una placa válida, ej. ABC-123.';
     setErrors(e);
     if (Object.keys(e).length) return;
+    // Guarda el pedido en la hoja de Google del negocio (no bloquea WhatsApp)
+    fetch('/api/membresia', {
+      method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre: cart.nombre, celular: cart.celular, placa: cart.placa, size: cart.size, period: cart.period, plan: cart.plan, extras: cart.extras }),
+    }).catch(() => {});
     window.open(waLink(orderMessage(c, cart)), '_blank', 'noopener');
     setSent(true);
   };
@@ -47,6 +55,7 @@ export default function CarwashClient() {
         <div style={{ maxWidth: 640 }}>
           <h1 className="h2">Carwash por membresía</h1>
           <p className="muted" style={{ margin: '8px 0 0', fontSize: 16, lineHeight: '24px' }}>Elige tu plan y suma los servicios extra que necesites. Todo queda en tu carrito.</p>
+          <Link href="/carwash/consulta" style={{ display: 'inline-block', marginTop: 8, fontWeight: 700, fontSize: 15 }}>¿Ya tienes membresía? Consulta tu placa →</Link>
         </div>
         <fieldset style={{ border: 0, margin: 0, padding: 0 }}>
           <legend style={{ fontSize: 13, fontWeight: 700, marginBottom: 8 }}>Tipo de vehículo</legend>
@@ -171,6 +180,10 @@ export default function CarwashClient() {
               <label className="field">Tu nombre
                 <input className={`input ${errors.nombre ? 'error' : ''}`} value={cart.nombre} onChange={(e) => setCart({ nombre: e.target.value })} autoComplete="name" placeholder="Ej. Carla Pérez" />
                 {errors.nombre && <span className="error-text">{errors.nombre}</span>}
+              </label>
+              <label className="field">Celular
+                <input className={`input ${errors.celular ? 'error' : ''}`} type="tel" inputMode="numeric" value={cart.celular || ''} onChange={(e) => setCart({ celular: e.target.value.replace(/[^\d ]/g, '').slice(0, 11) })} autoComplete="tel-national" placeholder="9XX XXX XXX" />
+                {errors.celular && <span className="error-text">{errors.celular}</span>}
               </label>
               {c.plan && (
                 <label className="field">Placa del vehículo

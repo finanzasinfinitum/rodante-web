@@ -1,11 +1,11 @@
 import { CarPlaceholder } from './Icons';
-import { carName, youtubeId } from '@/lib/cars';
+import { carName, youtubeId, photoUrl } from '@/lib/carUtils';
 import { usd } from '@/lib/pricing';
 
 const TINTS = ['#e3efef', '#fdf1d8', '#ecebe6'];
 
 export function CarThumb({ car, index = 0 }) {
-  const cover = car.photos?.[0];
+  const cover = car.photos?.[0] ? photoUrl(car.photos[0], 800) : null;
   const reserved = car.status === 'reservado';
   return (
     <div style={{ position: 'relative', aspectRatio: '4 / 3', background: TINTS[index % 3], display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
